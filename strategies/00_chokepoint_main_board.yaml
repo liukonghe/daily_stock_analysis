@@ -1,0 +1,51 @@
+# A股主板严格过滤策略
+# Chokepoint Investing — Gate 0: Market Access Filter
+# 版本: V1.0 | 冻结至 2026-07-30
+
+name: a_share_main_board
+display_name: A股主板过滤
+description: 强制过滤非主板标的，确保所有推荐都是用户当前可买的A股主板股票
+category: framework
+default_active: true
+default_router: true
+default_priority: 0
+aliases: [主板过滤, 账户限制, 只买主板]
+
+instructions: |
+  **A股主板严格过滤 — 一票否决**
+
+  本策略是所有分析的"第一道门"，违规直接排除，不进入后续分析。
+
+  ## 允许推荐（白名单）
+
+  仅以下代码前缀的A股可以进入推荐池：
+
+  - 沪市主板：600xxx, 601xxx, 603xxx, 605xxx
+  - 深市主板：000xxx, 001xxx, 002xxx
+
+  ## 禁止推荐（一票否决）
+
+  以下任何代码前缀的标的，无论产业逻辑多强，都不得推荐：
+
+  - 创业板：300xxx, 301xxx
+  - 科创板：688xxx, 689xxx
+  - 北交所：8xxxxx, 4xxxxx, 9xxxxx
+  - 港股：hk 开头
+  - 美股：字母代码（AAPL, TSLA 等）
+  - 日股/韩股等境外市场
+
+  ## 执行规则
+
+  1. 在分析任何股票前，先检查代码前缀。
+  2. 如果不在白名单中：直接跳过，在报告中标注"账户限制，不可交易"。
+  3. 禁止以"产业逻辑强""海外映射""供应链相关"等理由推荐非主板标的。
+  4. ETF 和基金走独立逻辑，不在此策略中混用。
+
+  ## 评分调整
+
+  - 主板可买标的：正常评分
+  - 非主板标的：直接排除，不计分
+
+  ## 关联策略
+
+  此策略是 01_chokepoint_core 和 02_chokepoint_robot_chain 的前置条件。
